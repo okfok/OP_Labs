@@ -1,4 +1,5 @@
 #include "FileStream.h"
+#include "FilePointer.h"
 
 std::string MODE = "-mode";
 std::string FILE_POINTER_MODE = "FilePointer";
@@ -13,7 +14,7 @@ int main(int argc, char *argv[]) {
 
     if (argc >= 3 && argv[1] == MODE) {
         if (argv[2] == FILE_POINTER_MODE) {
-
+            file_pointer_main(IN_FILE_NAME.c_str(), OUT_FILE_NAME.c_str());
         } else if (argv[2] == FILE_STREAM_MODE) {
             file_stream_main(IN_FILE_NAME, OUT_FILE_NAME);
         } else
