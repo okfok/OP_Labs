@@ -16,4 +16,6 @@ void write_task_line(const char *in_file_name, FILE * out_file_ptr, int begin, i
 
 void task(const char *in_file_name, const char *out_file_name);
 
+bool is_spacer(int chr);
+
 #endif //LAB1_FILEPOINTER_H

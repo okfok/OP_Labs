@@ -92,7 +92,7 @@ void write_task_line(const char *in_file_name, FILE* out_file_ptr, int begin, in
         int chr = fgetc(in_file_ptr);
         int num;
 
-        if (chr == -1 || chr == 10 || chr == 32) {
+        if (is_spacer(chr)) {
             if (i < word_end - 1) {
                 if ((num = to_number(in_file_name, i + 1, word_end + 1)) != -1) {
                     if (num != min)
@@ -115,7 +115,7 @@ void write_task_line(const char *in_file_name, FILE* out_file_ptr, int begin, in
     int word_begin = begin;
     for (int i = begin; i < end; ++i) {
         int chr = fgetc(in_file_ptr);
-        if (chr == -1 || chr == 10 || chr == 32) {
+        if (is_spacer(chr)) {
             if (i > word_begin) {
                 if (to_number(in_file_name, word_begin, i + 1) == -1) {
                     fseek(in_file_ptr, word_begin, SEEK_SET);
@@ -149,7 +149,7 @@ void task(const char *in_file_name, const char *out_file_name) {
     while (cont) {
         int chr = fgetc(in_file_ptr);
         cur_pos++;
-        if (chr == -1 || chr == 10 || chr == 32) {
+        if (is_spacer(chr)) {
             if (cur_pos > word_begin + 1) {
                 if ((num = to_number(in_file_name, word_begin, cur_pos)) != -1) {
                     if (min_found) {
@@ -167,7 +167,6 @@ void task(const char *in_file_name, const char *out_file_name) {
                 }
                 case 10: {
                     if (min_found) {
-                        std::cout << "writing line\n";
                         write_task_line(
                                 in_file_name,
                                 out_file_ptr,
@@ -191,4 +190,8 @@ void task(const char *in_file_name, const char *out_file_name) {
     fclose(in_file_ptr);
     fclose(out_file_ptr);
 
+}
+
+bool is_spacer(int chr){
+    return chr == -1 || chr == 10 || chr == 32;
 }
