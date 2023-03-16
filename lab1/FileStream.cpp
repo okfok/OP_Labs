@@ -1,12 +1,13 @@
-
 #include "FileStream.h"
 
 
 void file_stream_main(const std::string &in_file_name, const std::string &out_file_name) {
-    create_or_append_file(in_file_name);
-    task(in_file_name, out_file_name);
-    std::cout << "Out file:\n";
-    print_from_file(out_file_name);
+    create_or_append_file(in_file_name); // Prev editing input file (or creating if not exists)
+    std::cout << "Input file:\n";
+    print_from_file(in_file_name); // printing input file
+    task(in_file_name, out_file_name); // processing task
+    std::cout << "Output file:\n";
+    print_from_file(out_file_name); // printing output file
 }
 
 void print_from_file(const std::string &file_name) {
@@ -21,9 +22,9 @@ void print_from_file(const std::string &file_name) {
 }
 
 void create_or_append_file(const std::string &file_name) {
-    std::ifstream in_file("test.txt");
+    std::ifstream in_file(file_name);
     int mode = 0;
-    if (in_file.is_open()) {
+    if (in_file.is_open()) { // if file found print content and ask what to do
         std::cout << "Found file, content:\n";
         in_file.close();
 
@@ -36,15 +37,15 @@ void create_or_append_file(const std::string &file_name) {
     std::ofstream out_file;
     switch (mode) {
         case 0: {
-            out_file.open(file_name);
+            out_file.open(file_name); // rewrite mode
             break;
         }
         case 1: {
-            out_file.open(file_name, std::ios::app);
+            out_file.open(file_name, std::ios::app); // append mode
             break;
         }
         case 2: {
-            return;
+            return; // not edit
         }
         default: {
             throw;
@@ -67,7 +68,15 @@ void create_or_append_file(const std::string &file_name) {
 }
 
 bool is_number(const std::string &s) {
-    return !s.empty() && std::all_of(s.begin(), s.end(), ::isdigit);
+    if (s.empty())
+        return false;
+
+    for (char i : s) {
+        if (!isdigit(i)) // if one of chars is not digit it is word
+            return false;
+    }
+
+    return true;
 }
 
 void task(const std::string &in_file_name, const std::string &out_file_name) {
@@ -80,7 +89,7 @@ void task(const std::string &in_file_name, const std::string &out_file_name) {
         int min;
 
         std::string str = line;
-        while (true) {
+        while (true) { // finding min number
             int cur = str.find_first_of(' ');
             if (cur == -1) {
                 if (is_number(str)) {
@@ -113,7 +122,7 @@ void task(const std::string &in_file_name, const std::string &out_file_name) {
             }
         }
 
-        if (min_found) {
+        if (min_found) { // if min found write line to output file
             out_file << min << ' ';
             str = line;
 
@@ -152,8 +161,7 @@ void task(const std::string &in_file_name, const std::string &out_file_name) {
             }
 
             out_file << '\n';
-        } else
-            std::cout << "no min" << '\n';
+        }
 
     }
 

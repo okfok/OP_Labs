@@ -2,7 +2,6 @@
 #define LAB1_FILEPOINTER_H
 
 #include <iostream>
-//#include "string.h"
 
 void file_pointer_main(const char *in_file_name, const char *out_file_name);
 

@@ -1,10 +1,12 @@
 #include "FilePointer.h"
 
 void file_pointer_main(const char *in_file_name, const char *out_file_name) {
-    create_or_append_file(in_file_name);
-    task(in_file_name, out_file_name);
+    create_or_append_file(in_file_name); // Prev editing input file (or creating if not exists)
+    std::cout << "Input file:\n";
+    print_from_file(in_file_name); // printing input file
+    task(in_file_name, out_file_name); // processing task
     std::cout << "Output file:\n";
-    print_from_file(out_file_name);
+    print_from_file(out_file_name); // printing output file
 }
 
 void print_from_file(const char *file_name) {
@@ -26,7 +28,7 @@ void create_or_append_file(const char *file_name) {
     int mode = 0;
     FILE *file_ptr = fopen(file_name, "r");
 
-    if (file_ptr != nullptr) {
+    if (file_ptr != nullptr) { // if file found print content and ask what to do
         std::cout << "Found file, content:\n";
         fclose(file_ptr);
         print_from_file(file_name);
@@ -37,15 +39,15 @@ void create_or_append_file(const char *file_name) {
 
     switch (mode) {
         case 0: {
-            file_ptr = fopen(file_name, "w");
+            file_ptr = fopen(file_name, "w"); // rewrite mode
             break;
         }
         case 1: {
-            file_ptr = fopen(file_name, "a");
+            file_ptr = fopen(file_name, "a"); // append mode
             break;
         }
         case 2: {
-            return;
+            return; // not edit
         }
         default: {
             throw;
@@ -70,7 +72,7 @@ int to_number(const char *file_name, int begin, int end) {
 
     for (int i = begin; i < end - 1; ++i) {
         int chr = fgetc(file_ptr);
-        if (!isdigit(chr)) {
+        if (!isdigit(chr)) { // if one of chars is not digit it is word
             num = -1;
             break;
         }
@@ -166,7 +168,7 @@ void task(const char *in_file_name, const char *out_file_name) {
                     cont = false;
                 }
                 case 10: {
-                    if (min_found) {
+                    if (min_found) { // if min found write line to output file
                         write_task_line(
                                 in_file_name,
                                 out_file_ptr,
