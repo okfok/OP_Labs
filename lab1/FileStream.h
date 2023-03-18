@@ -3,7 +3,6 @@
 
 #include <fstream>
 #include <iostream>
-#include <algorithm>
 
 void file_stream_main(const std::string& in_file_name, const std::string& out_file_name);
 
