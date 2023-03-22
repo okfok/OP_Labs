@@ -20,6 +20,18 @@ int main() {
     std::cout << "Input file after deleting:\n";
     print_from_file(INPUT_FILE_NAME);
 
+    sort_patients(
+            INPUT_FILE_NAME,
+            SECONDARY_PATIENTS_FILE_NAME,
+            OTHER_PATIENTS_FILE_NAME
+    );
+
+
+    std::cout << "Secondary patients file:\n";
+    print_from_file(SECONDARY_PATIENTS_FILE_NAME);
+
+    std::cout << "Other patients file:\n";
+    print_from_file(OTHER_PATIENTS_FILE_NAME);
 
 }
 

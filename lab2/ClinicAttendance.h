@@ -44,15 +44,15 @@ bool attendance_passed_filter(const ClinicAttendance &);
 bool secondary_patient_filter(const ClinicAttendance &);
 
 void delete_by_filter(
-        const char[],
-        bool (const ClinicAttendance &) = attendance_passed_filter
+        const char file_name[],
+        bool (*filter)(const ClinicAttendance &) = attendance_passed_filter
 );
 
 void sort_patients(
-        const char[],
-        const char[],
-        const char[],
-        bool (const ClinicAttendance &) = secondary_patient_filter
+        const char in_file_name[],
+        const char passed_file_name[],
+        const char not_passed_file_name[],
+        bool (*filter)(const ClinicAttendance &) = secondary_patient_filter
 );
 
 
