@@ -6,6 +6,8 @@
 #include <iostream>
 #include <ctime>
 
+const char TEMP_FILE_NAME[] = "temp.bin";
+
 struct Date {
     int day;
     int month;
@@ -23,21 +25,35 @@ struct ClinicAttendance {
     Time cur_attendance_time;
 };
 
-tm* cur_time();
+tm cur_time();
 
-void create_or_append_file(const std::string &file_name);
+tm prev_attendance_time(ClinicAttendance const &ca);
+
+void create_or_append_file(const char file_name[]);
 
 void write_ca_record(std::ostream &out, ClinicAttendance const &data);
 
 ClinicAttendance *read_ca_record(std::istream &in);
 
-void write_to_file(const std::string &file_name, bool append = false);
+void write_console_to_file(const char file_name[], bool append = false);
 
-void print_from_file(const std::string &file_name);
+void print_from_file(const char file_name[]);
 
-bool attendance_passed(Time time);
+bool attendance_passed_filter(const ClinicAttendance &);
 
-void delete_if_attendance_passed(const std::string &file_name);
+bool secondary_patient_filter(const ClinicAttendance &);
+
+void delete_by_filter(
+        const char[],
+        bool (const ClinicAttendance &) = attendance_passed_filter
+);
+
+void sort_patients(
+        const char[],
+        const char[],
+        const char[],
+        bool (const ClinicAttendance &) = secondary_patient_filter
+);
 
 
 #endif //LAB2_CLINICATTENDANCE_H

@@ -1,6 +1,6 @@
 #include "ClinicAttendance.h"
 
-void create_or_append_file(const std::string &file_name) {
+void create_or_append_file(const char file_name[]) {
     std::ifstream in_file(file_name, std::ios::binary);
     int mode = 0;
     if (in_file.is_open()) { // if file found print content and ask what to do
@@ -16,7 +16,7 @@ void create_or_append_file(const std::string &file_name) {
     switch (mode) {
         case 0:
         case 1:
-            write_to_file(file_name, mode);
+            write_console_to_file(file_name, mode);
             break;
         case 2:
             return; // not edit
@@ -53,7 +53,7 @@ ClinicAttendance *read_ca_record(std::istream &in) {
     return ca;
 }
 
-void write_to_file(const std::string &file_name, bool append) {
+void write_console_to_file(const char file_name[], bool append) {
     ClinicAttendance ca;
 
     std::ofstream file;
@@ -88,13 +88,13 @@ void write_to_file(const std::string &file_name, bool append) {
     file.close();
 }
 
-void print_from_file(const std::string &file_name) {
+void print_from_file(const char file_name[]) {
     ClinicAttendance *ca;
     std::ifstream file(file_name, std::ios::binary);
 
     if (!file) {
         std::cout << "Error opening file. Program aborting.\n";
-        return;
+        throw;
     }
 
 
@@ -113,12 +113,75 @@ void print_from_file(const std::string &file_name) {
     file.close();
 }
 
-bool attendance_passed(Time time){
-    tm* now = cur_time();
-    return (now->tm_hour* 60 + now->tm_min) > (time.hours * 60 + time.minutes);
+bool attendance_passed_filter(const ClinicAttendance &ca) {
+    tm now = cur_time();
+    return (now.tm_hour * 60 + now.tm_min) >
+           (ca.cur_attendance_time.hours * 60 + ca.cur_attendance_time.minutes);
 }
 
-tm* cur_time(){
-    std::time_t t = std::time(nullptr);
-    return std::localtime(&t);
+bool secondary_patient_filter(const ClinicAttendance &ca) {
+    tm now = cur_time(), time = prev_attendance_time(ca);
+    return difftime(mktime(&now), mktime(&time)) <= 10 * 24 * 3600;
+
+}
+
+tm cur_time() {
+    time_t t = std::time(nullptr);
+    return *std::localtime(&t);
+}
+
+tm prev_attendance_time(ClinicAttendance const &ca) {
+    tm time = cur_time();
+
+    time.tm_year = ca.prev_attendance_date.year - 1900;
+    time.tm_mon = ca.prev_attendance_date.month - 1;
+    time.tm_mday = ca.prev_attendance_date.day;
+    return time;
+}
+
+
+void delete_by_filter(const char file_name[], bool (*filter)(const ClinicAttendance &)) {
+    std::ifstream file(file_name, std::ios::binary);
+    std::ofstream temp_file(TEMP_FILE_NAME, std::ios::binary);
+
+    ClinicAttendance *ca;
+
+    while ((ca = read_ca_record(file))) {
+        if (!filter(*ca)) {
+            write_ca_record(temp_file, *ca);
+        }
+    }
+
+    file.close();
+    temp_file.close();
+    remove(file_name);
+    rename(TEMP_FILE_NAME, file_name);
+
+
+}
+
+
+void sort_patients(
+        const char in_file_name[],
+        const char passed_file_name[],
+        const char not_passed_file_name[],
+        bool (*filter)(const ClinicAttendance &)
+) {
+    std::ifstream in_file(in_file_name, std::ios::binary);
+    std::ofstream pass_file(passed_file_name, std::ios::binary);
+    std::ofstream not_pass_file(not_passed_file_name, std::ios::binary);
+
+    ClinicAttendance *ca;
+
+    while ((ca = read_ca_record(in_file))) {
+        write_ca_record(
+                filter(*ca) ? pass_file : not_pass_file,
+                *ca
+        );
+    }
+
+    in_file.close();
+    pass_file.close();
+    not_pass_file.close();
+
 }
