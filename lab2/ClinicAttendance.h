@@ -55,5 +55,7 @@ void sort_patients(
         bool (*filter)(const ClinicAttendance &) = secondary_patient_filter
 );
 
+bool validate_ca_record(ClinicAttendance const &ca);
+
 
 #endif //LAB2_CLINICATTENDANCE_H

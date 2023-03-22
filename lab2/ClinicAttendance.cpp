@@ -80,8 +80,10 @@ void write_console_to_file(const char file_name[], bool append) {
               &ca.cur_attendance_time.hours,
               &ca.cur_attendance_time.minutes
         );
-
-        write_ca_record(file, ca);
+        if (validate_ca_record(ca))
+            write_ca_record(file, ca);
+        else
+            std::cout << "Validation error!!!\nTry one more time\n";
 
     }
 
@@ -97,19 +99,19 @@ void print_from_file(const char file_name[]) {
         throw;
     }
 
-
+    std::cout << "------------------------------------------------------------\n";
     while ((ca = read_ca_record(file))) {
         std::cout << "Surname: " << ca->surname << '\n'
                   << "Previous attendance: "
                   << ca->prev_attendance_date.day << "."
                   << ca->prev_attendance_date.month << "."
                   << ca->prev_attendance_date.year << '\n'
-                  << "Attendance cur_attendance_time: "
+                  << "Attendance time: "
                   << ca->cur_attendance_time.hours << ':'
                   << ca->cur_attendance_time.minutes << "\n\n";
 
     }
-    std::cout << "That's all the data in the file!\n";
+
     file.close();
 }
 
@@ -183,5 +185,24 @@ void sort_patients(
     in_file.close();
     pass_file.close();
     not_pass_file.close();
+
+}
+
+bool validate_ca_record(ClinicAttendance const &ca) {
+    if (!(0 <= ca.cur_attendance_time.hours && ca.cur_attendance_time.hours < 24))
+        return false;
+    if (!(0 <= ca.cur_attendance_time.minutes && ca.cur_attendance_time.minutes < 60))
+        return false;
+
+    if (!(1 <= ca.prev_attendance_date.day && ca.prev_attendance_date.day <= 31))
+        return false;
+    if (!(1 <= ca.prev_attendance_date.month && ca.prev_attendance_date.month <= 12))
+        return false;
+    if (2000 > ca.prev_attendance_date.year)
+        return false;
+
+
+    tm now = cur_time(), time = prev_attendance_time(ca);
+    return difftime(mktime(&now), mktime(&time)) > 0;
 
 }
