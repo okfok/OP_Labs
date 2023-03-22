@@ -17,7 +17,7 @@ int main() {
 
     delete_by_filter(INPUT_FILE_NAME);
 
-    std::cout << "Input file aster deleting:\n";
+    std::cout << "Input file after deleting:\n";
     print_from_file(INPUT_FILE_NAME);
 
 
