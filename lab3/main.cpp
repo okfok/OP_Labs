@@ -6,6 +6,7 @@ int main() {
     int count;
     std::cout << "Enter count of peoples: ";
     std::cin >> count;
+    std::cin.ignore();
 
 
     Person *person_array[count];

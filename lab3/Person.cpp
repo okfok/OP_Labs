@@ -94,7 +94,6 @@ DateOfBirth input_valid_date() {
 }
 
 Person *Person::input_from_console() {
-    std::cin.ignore();
 
     std::string surname, name, patronymic;
     surname = input_valid_str("Surname");
