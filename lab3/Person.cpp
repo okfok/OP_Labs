@@ -74,9 +74,14 @@ DateOfBirth input_valid_date() {
         std::string line;
         getline(std::cin, line);
         try {
+
+            if (line.size() != 10)
+                throw std::invalid_argument("Not valid format");
+
             int day = std::stoi(line.substr(0, 2));
-            int month = std::stoi(line.substr(3, 5));
-            int year = std::stoi(line.substr(6, 8));
+            int month = std::stoi(line.substr(3, 2));
+            int year = std::stoi(line.substr(6, 4));
+
 
             try {
                 return DateOfBirth(day, month, year);
