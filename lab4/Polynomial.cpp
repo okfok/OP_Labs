@@ -3,7 +3,7 @@
 
 double Polynomial::enumerate(double x) const {
     double res = 0;
-    for (int i = 0; i < degree; ++i) {
+    for (int i = 0; i <= degree; ++i) {
         res += a[i] * pow(x, i);
     }
     return res;
@@ -59,11 +59,22 @@ double Polynomial::get_coef(int num) {
 
 std::string Polynomial::to_str() {
     std::string str;
-    for (int i = degree; i > 0; --i) {
-        if (a[i] != 0)
-            str += std::to_string(a[i]) + ((i > 1) ? "x^" + std::to_string(i) : "x") + " + ";
+    for (int i = degree; i >= 0; --i) {
+        if (a[i] != 0) {
+            if (a[i] > 0 && i != degree)
+                str += "+";
+
+            str += std::to_string(a[i]);
+
+            if (i > 1)
+                str += "x^" + std::to_string(i);
+            else if (i == 1)
+                str += "x";
+
+            str += ' ';
+        }
     }
-    return str + ((a[0]) ? std::to_string(a[0]) : "\b\b ");
+    return str;
 }
 
 Polynomial::Polynomial(double a, double b, double c, double d) : degree(3) {
