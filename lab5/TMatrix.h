@@ -50,14 +50,14 @@ public:
     void print_to_console() override;
 };
 
-class Matrix_2: public SquareMatrix{
+class Matrix_2 : public SquareMatrix {
 public:
 
     Matrix_2() : SquareMatrix(2) {};
 };
 
 
-class Matrix_3: public SquareMatrix{
+class Matrix_3 : public SquareMatrix {
 public:
 
     Matrix_3() : SquareMatrix(3) {};

@@ -81,7 +81,7 @@ void TMatrix::print_to_console() {
     std::cout << "Sum: " << sum() << '\n';
 }
 
-void SquareMatrix::print_to_console(){
+void SquareMatrix::print_to_console() {
     TMatrix::print_to_console();
     std::cout << "Det: " << determinant() << '\n';
 }
@@ -89,7 +89,7 @@ void SquareMatrix::print_to_console(){
 
 long double SquareMatrix::determinant() {
     if (_row == 2)
-        return _matrix[0][0] * _matrix[1][1] - (_matrix[1][0] * _matrix[0][1]);
+        return (_matrix[0][0] * _matrix[1][1]) - (_matrix[1][0] * _matrix[0][1]);
 
 
     long double det = 0;
