@@ -47,7 +47,7 @@ public:
 
     long double determinant();
 
-    void print_to_console();
+    void print_to_console() override;
 };
 
 class Matrix_2: public SquareMatrix{
