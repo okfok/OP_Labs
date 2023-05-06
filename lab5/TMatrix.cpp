@@ -1,13 +1,15 @@
 #include "TMatrix.h"
 
 
-double **create_matrix(int row, int col) {
+double **create_matrix(int row, int col, bool fill_with_zero = true) {
     auto matrix = new double *[row];
 
     for (int i = 0; i < row; ++i) {
         matrix[i] = new double[col];
-        for (int j = 0; j < col; ++j) {
-            matrix[i][j] = 0;
+        if (fill_with_zero) {
+            for (int j = 0; j < col; ++j) {
+                matrix[i][j] = 0;
+            }
         }
     }
 
@@ -17,7 +19,7 @@ double **create_matrix(int row, int col) {
 TMatrix::TMatrix(int row, int col) : _row(row), _col(col), _matrix(create_matrix(row, col)) {}
 
 TMatrix::TMatrix(TMatrix &other) : _row(other._row), _col(other._col) {
-    _matrix = create_matrix(_row, _row);
+    _matrix = create_matrix(_row, _row, false);
 
     for (int i = 0; i < _row; ++i) {
         for (int j = 0; j < _col; ++j) {
