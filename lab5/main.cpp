@@ -8,7 +8,7 @@
 2 0 3
 1 5 4
 
- B
+B
 3 7
 1 -4
 
@@ -20,22 +20,16 @@ int main() {
 
     auto **array = new TMatrix *[2];
 
-    array[0] = new Matrix_3; // A
-
     std::cout << "Matrix A:\n";
-    array[0]->input_from_console();
-
-    array[1] = new Matrix_2; // B
+    array[0] = input_matrix_from_console(3, 3); // A
 
     std::cout << "Matrix B:\n";
-    array[1]->input_from_console();
+    array[1] = input_matrix_from_console(2, 2); // B
 
 
-    std::cout << "Matrix A:\n";
-    array[0]->print_to_console();
+    std::cout << "A:\n" << array[0]->to_str();
 
-    std::cout << "Matrix B:\n";
-    array[1]->print_to_console();
+    std::cout << "B:\n" << array[1]->to_str();
 
     std::cout << "\nAnswer: " << (array[0]->sum() + array[0]->determinant() + array[1]->determinant()) << '\n';
 

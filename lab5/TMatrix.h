@@ -9,7 +9,7 @@ protected:
     double **_matrix;
     const int _row, _col;
 
-    TMatrix(double **matrix, int row, int col) :
+    TMatrix(int row, int col, double **matrix) :
             _matrix(matrix), _row(row), _col(col) {}
 
 public:
@@ -19,62 +19,58 @@ public:
 
     virtual ~TMatrix();
 
+
     int size_row() const { return _row; }
 
     int size_col() const { return _col; }
 
-    double get_element(int row, int col);
+    double &element(int row, int col) { return _matrix[row][col]; }
 
-    void set_element(int row, int col, double value);
+
+    virtual std::string to_str();
+
 
     long double sum();
-
-    void input_from_console();
-
-    virtual void print_to_console();
 
     virtual long double determinant() = 0;
 
 
 };
 
-class SquareMatrix : public TMatrix {
-protected:
 
-    SquareMatrix(double **matrix, int n) :
-            TMatrix(matrix, n, n) {}
-
+class Matrix : public TMatrix {
 public:
-    explicit SquareMatrix(int n) : TMatrix(n, n) {};
+    Matrix(int row, int col) : TMatrix(row, col) {}
+
+
+    long double determinant() override { throw std::logic_error("Function not implemented"); }
+};
+
+class Matrix_2 : public TMatrix {
+public:
+
+    Matrix_2() : TMatrix(2, 2) {};
 
     long double determinant() override;
 
-    void print_to_console() override;
-
-    virtual int size() const { return _row; };
+    std::string to_str() override;
 
 };
 
-class Matrix_2 : public SquareMatrix {
+
+class Matrix_3 : public TMatrix {
 public:
 
-    Matrix_2() : SquareMatrix(2) {};
+    Matrix_3() : TMatrix(3, 3) {};
 
     long double determinant() override;
 
-    int size() const override { return 2; }
+    std::string to_str() override;
 
 };
 
 
-class Matrix_3 : public SquareMatrix {
-public:
-
-    Matrix_3() : SquareMatrix(3) {};
-
-    int size() const override { return 3; }
-
-};
+TMatrix *input_matrix_from_console(int row, int col);
 
 
 #endif //LAB5_TMATRIX_H

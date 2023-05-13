@@ -35,22 +35,6 @@ TMatrix::~TMatrix() {
     delete[] _matrix;
 }
 
-double TMatrix::get_element(int row, int col) {
-    if ((0 <= row && row < _row) && (0 <= col && col < _col)) {
-        return _matrix[row][col];
-    } else {
-        throw;
-    }
-}
-
-void TMatrix::set_element(int row, int col, double value) {
-    if ((0 <= row && row < _row) && (0 <= col && col < _col)) {
-        _matrix[row][col] = value;
-    } else {
-        throw;
-    }
-}
-
 long double TMatrix::sum() {
     long double sum = 0;
     for (int i = 0; i < _row; ++i) {
@@ -62,63 +46,18 @@ long double TMatrix::sum() {
     return sum;
 }
 
-void TMatrix::input_from_console() {
-    std::cout << "Enter numbers of " << _row << 'x' << _col << " matrix:\n";
+std::string TMatrix::to_str() {
+    std::string str = "Matrix(" + std::to_string(_row) + 'x' + std::to_string(_col) + "):\n";
 
     for (int i = 0; i < _row; ++i) {
         for (int j = 0; j < _col; ++j) {
-            std::cin >> _matrix[i][j];
+            str += std::to_string(_matrix[i][j]) + ' ';
         }
-    }
-}
-
-void TMatrix::print_to_console() {
-    for (int i = 0; i < _row; ++i) {
-        for (int j = 0; j < _col; ++j) {
-            std::cout << _matrix[i][j] << ' ';
-        }
-        std::cout << '\n';
+        str += '\n';
     }
 
-    std::cout << "Sum: " << sum() << '\n';
-}
+    return str + "Sum: " + std::to_string(sum()) + '\n';
 
-void SquareMatrix::print_to_console() {
-    TMatrix::print_to_console();
-    std::cout << "Det: " << determinant() << '\n';
-}
-
-
-long double SquareMatrix::determinant() {
-    if (_row <= 1)
-        throw;
-
-    if (_row == 2)
-        return (_matrix[0][0] * _matrix[1][1]) - (_matrix[1][0] * _matrix[0][1]);
-
-
-    long double det = 0;
-
-
-    for (int x = 0; x < _row; x++) {
-        double **submatrix = create_matrix(_row - 1, _row - 1);
-
-        int subi = 0;
-        for (int i = 1; i < _row; i++) {
-            int subj = 0;
-            for (int j = 0; j < _row; j++) {
-                if (j == x)
-                    continue;
-                submatrix[subi][subj] = _matrix[i][j];
-                subj++;
-            }
-            subi++;
-        }
-        det += (((x % 2) ? -1 : 1) * _matrix[0][x] * SquareMatrix(submatrix, _row - 1).determinant());
-        submatrix = nullptr;
-    }
-
-    return det;
 }
 
 
@@ -126,3 +65,55 @@ long double Matrix_2::determinant() {
     return (_matrix[0][0] * _matrix[1][1]) - (_matrix[1][0] * _matrix[0][1]);
 }
 
+long double Matrix_3::determinant() {
+
+    long double det = 0;
+
+    for (int x = 0; x < _row; x++) {
+        Matrix_2 submatrix;
+
+        int subi = 0;
+        for (int i = 1; i < _row; i++) {
+            int subj = 0;
+            for (int j = 0; j < _row; j++) {
+                if (j == x)
+                    continue;
+                submatrix.element(subi, subj) = _matrix[i][j];
+                subj++;
+            }
+            subi++;
+        }
+        det += (((x % 2) ? -1 : 1) * _matrix[0][x] * submatrix.determinant());
+    }
+
+    return det;
+}
+
+std::string Matrix_2::to_str() { return TMatrix::to_str() + "Det: " + std::to_string(determinant()) + '\n'; }
+
+std::string Matrix_3::to_str() { return TMatrix::to_str() + "Det: " + std::to_string(determinant()) + '\n'; }
+
+
+TMatrix *input_matrix_from_console(int row, int col) {
+    std::cout << "Enter numbers of " << row << 'x' << col << " matrix:\n";
+
+    TMatrix *matrix;
+
+    if (row == 2 && col == 2)
+        matrix = new Matrix_2;
+    else if (row == 3 && col == 3)
+        matrix = new Matrix_3;
+    else
+        matrix = new Matrix(row, col);
+
+
+    for (int i = 0; i < row; ++i) {
+        for (int j = 0; j < col; ++j) {
+            std::cin >> matrix->element(i, j);
+
+        }
+    }
+
+
+    return matrix;
+}
