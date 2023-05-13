@@ -90,6 +90,9 @@ void SquareMatrix::print_to_console() {
 
 
 long double SquareMatrix::determinant() {
+    if (_row <= 1)
+        throw;
+
     if (_row == 2)
         return (_matrix[0][0] * _matrix[1][1]) - (_matrix[1][0] * _matrix[0][1]);
 
@@ -119,5 +122,7 @@ long double SquareMatrix::determinant() {
 }
 
 
-
+long double Matrix_2::determinant() {
+    return (_matrix[0][0] * _matrix[1][1]) - (_matrix[1][0] * _matrix[0][1]);
+}
 

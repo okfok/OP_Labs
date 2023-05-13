@@ -17,11 +17,11 @@ public:
 
     TMatrix(TMatrix &other);
 
-    ~TMatrix();
+    virtual ~TMatrix();
 
-    int size_row() { return _row; }
+    int size_row() const { return _row; }
 
-    int size_col() { return _col; }
+    int size_col() const { return _col; }
 
     double get_element(int row, int col);
 
@@ -32,6 +32,8 @@ public:
     void input_from_console();
 
     virtual void print_to_console();
+
+    virtual long double determinant() = 0;
 
 
 };
@@ -45,15 +47,23 @@ protected:
 public:
     explicit SquareMatrix(int n) : TMatrix(n, n) {};
 
-    long double determinant();
+    long double determinant() override;
 
     void print_to_console() override;
+
+    virtual int size() const { return _row; };
+
 };
 
 class Matrix_2 : public SquareMatrix {
 public:
 
     Matrix_2() : SquareMatrix(2) {};
+
+    long double determinant() override;
+
+    int size() const override { return 2; }
+
 };
 
 
@@ -61,6 +71,9 @@ class Matrix_3 : public SquareMatrix {
 public:
 
     Matrix_3() : SquareMatrix(3) {};
+
+    int size() const override { return 3; }
+
 };
 
 

@@ -15,24 +15,34 @@
 */
 
 
+
 int main() {
-    Matrix_3 A;
+
+    auto **array = new TMatrix *[2];
+
+    array[0] = new Matrix_3; // A
 
     std::cout << "Matrix A:\n";
-    A.input_from_console();
+    array[0]->input_from_console();
 
-    Matrix_2 B;
+    array[1] = new Matrix_2; // B
 
     std::cout << "Matrix B:\n";
-    B.input_from_console();
+    array[1]->input_from_console();
+
 
     std::cout << "Matrix A:\n";
-    A.print_to_console();
+    array[0]->print_to_console();
 
     std::cout << "Matrix B:\n";
-    B.print_to_console();
+    array[1]->print_to_console();
 
-    std::cout << "\nAnswer: " << (A.sum() + A.determinant() + B.determinant()) << '\n';
+    std::cout << "\nAnswer: " << (array[0]->sum() + array[0]->determinant() + array[1]->determinant()) << '\n';
+
+
+    delete array[0];
+    delete array[1];
+    delete[] array;
 
 
 }
