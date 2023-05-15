@@ -52,28 +52,8 @@ void Map<Data>::add(std::string key, Data data) {
     if (_count + 1 >= _size) {
         throw; // TODO: exception
     }
-    _count++;
 
-    Node<Data> *node = new Node(key, data);
-
-    int hash_code = hash(key);
-
-    if (!_nodes[hash_code])
-        _nodes[hash_code] = node;
-    else {
-        for (int i = 0; i < _size; ++i) {
-            hash_code++;
-            if (hash_code == _size)
-                hash_code -= _size;
-
-            if (!_nodes[hash_code]) {
-                _nodes[hash_code] = node;
-                break;
-            }
-
-        }
-
-    }
+    add(new Node(key, data));
 
 }
 
