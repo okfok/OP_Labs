@@ -25,6 +25,8 @@ class Map {
     int _size;
     int _count = 0;
     Node<Data> **_nodes;
+
+    int find_pos(std::string key);
 public:
     // Constructors
     explicit Map(int size = 50);
@@ -82,6 +84,28 @@ public:
 
 
 };
+
+template<typename Data>
+int Map<Data>::find_pos(std::string key) {
+    int hash_code = hash(key);
+
+    if (_nodes[hash_code] && _nodes[hash_code]->key() == key)
+        return hash_code;
+    else {
+        for (int i = 0; i < _size; ++i) {
+            hash_code++;
+            if (hash_code == _size)
+                hash_code -= _size;
+
+            if (_nodes[hash_code] && _nodes[hash_code]->key() == key) {
+                return hash_code;
+            }
+
+        }
+    }
+
+    throw; // TODO: exception
+}
 
 
 #endif //LAB6_MAP_H

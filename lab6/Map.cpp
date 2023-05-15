@@ -88,53 +88,20 @@ void Map<Data>::add(Node<Data> *node) {
 
 template<typename Data>
 Data Map<Data>::find(std::string key) {
-    int hash_code = hash(key);
-
-    if (!_nodes[hash_code] || _nodes[hash_code]->key() == key)
-        return _nodes[hash_code]->value();
-    else {
-        for (int i = 0; i < _size; ++i) {
-            hash_code++;
-            if (hash_code == _size)
-                hash_code -= _size;
-
-            if (_nodes[hash_code] && _nodes[hash_code]->key() == key) {
-                return _nodes[hash_code]->value();
-            }
-
-        }
-    }
-
-    throw; // TODO: exception
+    Node<Data> * node = _nodes[find_pos(key)];
+    return node->value();
 }
 
 template<typename Data>
 Data Map<Data>::del(std::string key) {
-    int hash_code = hash(key);
+    int pos = find_pos(key);
 
-    if (!_nodes[hash_code] || _nodes[hash_code]->key() == key) {
-        Data data = _nodes[hash_code]->value();
-        delete _nodes[hash_code];
-        _nodes[hash_code] = nullptr;
-        _count--;
-        return data;
-    } else {
-        for (int i = 0; i < _size; ++i) {
-            hash_code++;
-            if (hash_code == _size)
-                hash_code -= _size;
+    Data data = _nodes[pos]->value();
+    delete _nodes[pos];
+    _nodes[pos] = nullptr;
+    _count--;
+    return data;
 
-            if (_nodes[hash_code] && _nodes[hash_code]->key() == key) {
-                Data data = _nodes[hash_code]->value();
-                delete _nodes[hash_code];
-                _nodes[hash_code] = nullptr;
-                return data;
-            }
-
-        }
-    }
-
-    throw; // TODO: exception
 }
 
 template<typename Data>

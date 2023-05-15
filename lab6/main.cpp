@@ -9,7 +9,7 @@ int main() {
     map.add("first", 15);
 
 
-//    std::cout << map.find("first");
+    std::cout << map.find("first") << '\n';
 
 //    Test a(6);
 
