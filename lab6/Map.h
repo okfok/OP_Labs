@@ -2,22 +2,15 @@
 #define LAB6_MAP_H
 
 #include <iostream>
-#include <utility>
 
 
 template<typename Data>
 class Node {
-    std::string _key;
-    Data _data;
-
 public:
+    std::string key;
+    Data data;
 
-    Node(std::string key, Data data) : _key(std::move(key)), _data(data) {};
-
-    Data value() { return _data; }
-
-    std::string key() { return _key; }
-
+    Node(std::string key, Data data) : key(std::move(key)), data(data) {};
 };
 
 template<typename Data>
@@ -26,18 +19,21 @@ class Map {
     int _count = 0;
     Node<Data> **_nodes;
 
-    int find_pos(std::string key);
+    int find_pos(std::string key); // finding pos for find and delete funcs
+
 public:
-    // Constructors
+    // Constructors / Destructors
     explicit Map(int size = 50);
 
     Map(Map &);
 
     ~Map();
-    // hash
+    // hash func
 
     int hash(const std::string &key);
     // data editing
+
+    int size() { return _size; }
 
     void resize(int size);
 
@@ -52,60 +48,44 @@ public:
     Data del(std::string key);
 
     // Iterator
-
     class Iterator {
         Node<Data> **m_ptr;
 
     public:
-        explicit Iterator(Node<Data> **ptr) : m_ptr(ptr) {}
+        explicit Iterator(Node<Data> **ptr) : m_ptr(ptr) {} // constructor
 
-        Node<Data> *operator*() { return *m_ptr; }
-
-        Node<Data> **operator->() { return m_ptr; }
-
+        // cur element
         Node<Data> *get() { return *m_ptr; }
 
-
+        // next element
         Iterator &operator++();
 
         Iterator &operator++(int);
 
         void next() { operator++(); }
 
+        // operators overload
+        Node<Data> *operator*() { return *m_ptr; }
+
+        Node<Data> **operator->() { return m_ptr; }
 
         friend bool operator==(const Iterator &a, const Iterator &b) { return a.m_ptr == b.m_ptr; };
 
         friend bool operator!=(const Iterator &a, const Iterator &b) { return a.m_ptr != b.m_ptr; };
+
+        friend bool operator<(const Iterator &a, const Iterator &b) { return a.m_ptr < b.m_ptr; }
+
+        friend bool operator>(const Iterator &a, const Iterator &b) { return a.m_ptr > b.m_ptr; }
+
     };
 
-    Iterator begin();
+    // funcs to get iterator
+    Iterator begin() { return Iterator(&_nodes[0]); }
 
-    Iterator end();
+    Iterator end() { return Iterator(&_nodes[_size]); }
 
 
 };
-
-template<typename Data>
-int Map<Data>::find_pos(std::string key) {
-    int hash_code = hash(key);
-
-    if (_nodes[hash_code] && _nodes[hash_code]->key() == key)
-        return hash_code;
-    else {
-        for (int i = 0; i < _size; ++i) {
-            hash_code++;
-            if (hash_code == _size)
-                hash_code -= _size;
-
-            if (_nodes[hash_code] && _nodes[hash_code]->key() == key) {
-                return hash_code;
-            }
-
-        }
-    }
-
-    throw; // TODO: exception
-}
 
 
 #endif //LAB6_MAP_H

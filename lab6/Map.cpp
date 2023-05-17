@@ -32,7 +32,10 @@ template<typename Data>
 Map<Data>::Map(Map &other): _size(other._size) {
     _nodes = new Node<Data> *[_size];
     for (int i = 0; i < _size; ++i) {
-        _nodes[i] = other._nodes[i];
+        if (other._nodes[i])
+            _nodes[i] = new Node<Data>(other._nodes[i]);
+        else
+            _nodes[i] = nullptr;
     }
 }
 
@@ -50,7 +53,7 @@ void Map<Data>::clear() {
 template<typename Data>
 void Map<Data>::add(std::string key, Data data) {
     if (_count + 1 >= _size) {
-        throw; // TODO: exception
+        throw std::logic_error("Too many nodes in map");
     }
 
     add(new Node(key, data));
@@ -60,12 +63,12 @@ void Map<Data>::add(std::string key, Data data) {
 template<typename Data>
 void Map<Data>::add(Node<Data> *node) {
     if (_count + 1 >= _size) {
-        throw; // TODO: exception
+        throw std::logic_error("Too many nodes in map");
     }
     _count++;
 
 
-    int hash_code = hash(node->key());
+    int hash_code = hash(node->key);
 
     if (!_nodes[hash_code])
         _nodes[hash_code] = node;
@@ -88,15 +91,15 @@ void Map<Data>::add(Node<Data> *node) {
 
 template<typename Data>
 Data Map<Data>::find(std::string key) {
-    Node<Data> * node = _nodes[find_pos(key)];
-    return node->value();
+    Node<Data> *node = _nodes[find_pos(key)];
+    return node->data;
 }
 
 template<typename Data>
 Data Map<Data>::del(std::string key) {
     int pos = find_pos(key);
 
-    Data data = _nodes[pos]->value();
+    Data data = _nodes[pos]->data;
     delete _nodes[pos];
     _nodes[pos] = nullptr;
     _count--;
@@ -138,29 +141,6 @@ void Map<Data>::resize(int size) {
 
 
 template<typename Data>
-typename Map<Data>::Iterator Map<Data>::begin() {
-//    for (int i = 0; i < _size; ++i) {
-//        if (_nodes[i])
-//            return Iterator(&_nodes[i]);
-//    }
-
-    return Iterator(&_nodes[0]);
-
-}
-
-template<typename Data>
-typename Map<Data>::Iterator Map<Data>::end() {
-//    for (int i = _size - 1; i >= 0; --i) {
-//        if (_nodes[i]) {
-//            return Iterator(&_nodes[i+1]);
-//        }
-//    }
-
-    return Iterator(&_nodes[_size]);
-
-}
-
-template<typename Data>
 typename Map<Data>::Iterator &Map<Data>::Iterator::operator++() {
     m_ptr++;
     return *this;
@@ -173,3 +153,24 @@ typename Map<Data>::Iterator &Map<Data>::Iterator::operator++(int) {
     return tmp;
 }
 
+template<typename Data>
+int Map<Data>::find_pos(std::string key) {
+    int hash_code = hash(key);
+
+    if (_nodes[hash_code] && _nodes[hash_code]->key == key)
+        return hash_code;
+    else {
+        for (int i = 0; i < _size; ++i) {
+            hash_code++;
+            if (hash_code == _size)
+                hash_code -= _size;
+
+            if (_nodes[hash_code] && _nodes[hash_code]->key == key) {
+                return hash_code;
+            }
+
+        }
+    }
+
+    throw std::logic_error("Node is not found");
+}
