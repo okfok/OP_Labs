@@ -52,7 +52,7 @@ void Map<Data>::clear() {
 
 template<typename Data>
 void Map<Data>::add(std::string key, Data data) {
-    if (_count + 1 >= _size) {
+    if (_count + 1 > _size) {
         throw std::logic_error("Too many nodes in map");
     }
 
@@ -62,7 +62,7 @@ void Map<Data>::add(std::string key, Data data) {
 
 template<typename Data>
 void Map<Data>::add(Node<Data> *node) {
-    if (_count + 1 >= _size) {
+    if (_count + 1 > _size) {
         throw std::logic_error("Too many nodes in map");
     }
     _count++;
