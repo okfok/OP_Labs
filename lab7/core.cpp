@@ -1,10 +1,16 @@
 #include "core.h"
 
+double _log(double arg){
+    if (arg == 0)
+        throw LogArgumentZero();
+
+    if (arg < 0)
+        throw LogWrongArgument(arg);
+
+    return log(arg);
+}
+
 
 double Function::get_y() {
-    if (_x - 2 <= 0)
-        throw LogWrongArgument(_x - 2);
-
-
-    return log(_x) / log(_x - 2);
+    return _log(_x) / _log(_x - 2);
 }

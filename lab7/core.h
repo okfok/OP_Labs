@@ -6,12 +6,21 @@
 
 
 class LogWrongArgument: std::exception{
+protected:
     double _arg;
 public:
     LogWrongArgument(double arg): _arg(arg){}
 
     std::string what () {
-        return "Wrong argument given: " + std::to_string(_arg) + " must be > 0";
+        return "Wrong argument given to log function: " + std::to_string(_arg) + " must be > 0";
+    }
+};
+
+class LogArgumentZero: std::exception{
+public:
+
+    std::string what () {
+        return "Log function argument cant be 0";
     }
 };
 

@@ -21,10 +21,6 @@ void MainWindow::on_pushButton_clicked() {
         return;
     }
 
-
-
-
-
     try{
         double x1, x2;
 
@@ -41,10 +37,16 @@ void MainWindow::on_pushButton_clicked() {
         y2 = f2.get_y();
 
 
-        ui->textEdit->setText(QString::fromStdString( "Y1 - " + std::to_string(y1) + "\nY2 - " + std::to_string(y2) + "\n"));
+        ui->textEdit->setText(QString::fromStdString(
+            "Y1: " + std::to_string(y1) +
+            "\nY2: " + std::to_string(y2) +
+            "\nMax: (" + ((y1 >= y2)? std::to_string(x1) + ", " + std::to_string(y1) : std::to_string(x2) + ", " + std::to_string(y2)) + ")"
+        ));
     } catch (LogWrongArgument exception){
         QMessageBox::information(this, "Error", QString::fromStdString(exception.what()));
-    } catch (std::invalid_argument exception) {
+    } catch (LogArgumentZero exception){
+        QMessageBox::information(this, "Error", QString::fromStdString(exception.what()));
+    } catch (std::invalid_argument) {
         QMessageBox::information(this, "Error", QString("X1 and X2 must be numbers"));
     }
 
