@@ -24,6 +24,14 @@ public:
     }
 };
 
+class DividingByZero: std::exception{
+public:
+
+    std::string what () {
+        return "Cant divide by 0";
+    }
+};
+
 class Function
 {
     double _x;

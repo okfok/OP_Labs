@@ -12,5 +12,7 @@ double _log(double arg){
 
 
 double Function::get_y() {
+    if (_log(_x - 2) == 0)
+        throw DividingByZero();
     return _log(_x) / _log(_x - 2);
 }

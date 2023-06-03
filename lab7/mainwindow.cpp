@@ -46,6 +46,8 @@ void MainWindow::on_pushButton_clicked() {
         QMessageBox::information(this, "Error", QString::fromStdString(exception.what()));
     } catch (LogArgumentZero exception){
         QMessageBox::information(this, "Error", QString::fromStdString(exception.what()));
+    } catch (DividingByZero exception ){
+        QMessageBox::information(this, "Error", QString::fromStdString(exception.what()));
     } catch (std::invalid_argument) {
         QMessageBox::information(this, "Error", QString("X1 and X2 must be numbers"));
     }
